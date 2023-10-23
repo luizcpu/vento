@@ -27,8 +27,18 @@ if not lan.active():
 while not lan.isconnected():
     pass
 
-sleep(4)
-endip = lan.ifconfig()[0]
+sleep(1)
+ip_ok = False
+maxt = 0
+while not ip_ok:
+    endip = lan.ifconfig()[0]
+    if endip != "0.0.0.0":
+        ip_ok = True
+    maxt += 1
+    if maxt >= 10:
+        break
+    sleep(1)
+
 display.fill(0)
 display.text('IP:', 0, 0, 1)
 display.text(endip, 32, 0, 1)
@@ -109,3 +119,4 @@ data_check_timer.init(period=amostragem*1000, mode=Timer.PERIODIC, callback=calc
 server = MicroPyServer()
 server.add_route("/", winddir_speed)
 server.start()
+
